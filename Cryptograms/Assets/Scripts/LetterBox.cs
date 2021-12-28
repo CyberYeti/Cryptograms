@@ -14,7 +14,8 @@ public class LetterBox : MonoBehaviour
     [SerializeField] Button inputButton;
 
     int boxNumber;
-    bool isLetter;
+    bool isLetter = true;
+    bool isSelected = false;
     TextBlock parentTextBlock;
 
     public int BoxNumber
@@ -76,15 +77,17 @@ public class LetterBox : MonoBehaviour
     {
         set
         {
-            if (!isLetter)
-                print("Error this is not a letter and should not be selected.");
-
             if (value)
             {
-                inputAreaPanel.color = selectedColor;
+                if (!isLetter)
+                    Debug.LogWarning($"Error: LetterBox{boxNumber} is not a letter and should not be selected.");
+                else
+                    isSelected = true;
+                    inputAreaPanel.color = selectedColor;
             }
             else
             {
+                isSelected = false;
                 inputAreaPanel.color = unselectedColor;
             }
         }
@@ -100,8 +103,6 @@ public class LetterBox : MonoBehaviour
     private void Start()
     {
         parentTextBlock = this.transform.parent.GetComponent<TextBlock>();
-        
-        IsSelected = false;
         InputLetter = " ";
     }
 

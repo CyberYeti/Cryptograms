@@ -15,7 +15,42 @@ public class TextBlock : MonoBehaviour
 
     Vector2 letterBoxDim;
     RectTransform rt;
-    int selectedBoxIndex = 0;
+    int selectedBoxIndex = -1;
+    /*
+    int selectedBoxIndexTest = -1;
+
+    int SelectedBoxIndex
+    {
+        get { return selectedBoxIndexTest; }
+        set
+        {
+            print("Set request SelectedBoxIndex");
+            if (selectedBoxIndexTest != value)
+            {
+                print("Changing value of SelectedBoxIndex");
+                selectedBoxIndexTest = value;
+            }
+        }
+    }
+    */
+    public string Text
+    {
+        set
+        {
+            //Reset Letter Boxer
+            selectedBoxIndex = -1;
+            while (letterBoxes.Count > 0)
+            {
+                LetterBox boxToRemove = letterBoxes[0];
+                letterBoxes.RemoveAt(0);
+                Destroy(boxToRemove.gameObject);
+            }
+
+            //Generate New Text
+            text = value;
+            GenerateTextBlock(text);
+        }
+    }
 
     public string Output
     {
@@ -35,16 +70,16 @@ public class TextBlock : MonoBehaviour
         rt = GetComponent<RectTransform>();
 
         //Generate Text Block
-        GenerateTextBlock(text);
+        Text = text;
 
         //LetterBoxes Setup
-        letterBoxes[selectedBoxIndex].IsSelected = true;
+        letterBoxes[0].IsSelected = true;
     }
 
     private void Update()
     {
+        //SelectedBoxIndex = selectedBoxIndex;
         DetectInput();
-        print(Output);
     }
 
     public void UpdateSelectedBox(int newIndex)
@@ -52,6 +87,7 @@ public class TextBlock : MonoBehaviour
         letterBoxes[selectedBoxIndex].IsSelected = false;
         letterBoxes[newIndex].IsSelected = true;
         selectedBoxIndex = newIndex;
+        //print($"The current index after updating the selected box is {selectedBoxIndex}.");
     }
 
     private void SelectNextBox()
@@ -65,6 +101,7 @@ public class TextBlock : MonoBehaviour
                 newBoxIndex++;
         }
         while (!letterBoxes[newBoxIndex].IsLetter);//Makes sure you are switching to a letter whose value you can change and not something like a period
+        //print($"New index at the time of choosing the new index is {newBoxIndex} and the current index is {selectedBoxIndex}.");
         UpdateSelectedBox(newBoxIndex);
     }
 
@@ -94,7 +131,7 @@ public class TextBlock : MonoBehaviour
     {
         int numRows = rowsText.Count;
         int counter = 0;
-        float yPos = rt.position.y + (numRows * letterBoxDim.y / 2) - (letterBoxDim.y / 2);
+        float yPos = rt.position.y + rt.sizeDelta.y / 2 - letterBoxDim.y / 2;
         foreach (string word in rowsText)
         {
             float xPos = rt.position.x - rt.sizeDelta.x / 2 + letterBoxDim.x / 2;
@@ -103,10 +140,12 @@ public class TextBlock : MonoBehaviour
                 if (c == " "[0])
                 {
                     LetterBox NewLetterBox = Instantiate(letterBoxPF);
-                    NewLetterBox.InputLetter = " ";
+                    NewLetterBox.transform.SetParent(this.transform);
+                    NewLetterBox.Letter = " ";
+                    NewLetterBox.transform.name = $"LetterBox{counter}";
+                    NewLetterBox.IsLetter = false;
                     NewLetterBox.gameObject.SetActive(false);
                     letterBoxes.Add(NewLetterBox);
-                    print(NewLetterBox.InputLetter);
 
                     xPos += spaceGap;
                     counter++;
@@ -123,16 +162,23 @@ public class TextBlock : MonoBehaviour
                 NewLB.BoxNumber = counter;
                 NewLB.Letter = _text[counter].ToString().ToUpper();
                 NewLB.IsLetter = A0Z25.IsLetter(_text[counter]);
+                if (selectedBoxIndex == -1)
+                {
+                    NewLB.IsSelected = true;
+                    selectedBoxIndex = counter;
+                }
 
                 xPos += letterBoxDim.x;
                 counter++;
             }
 
             LetterBox NewBox = Instantiate(letterBoxPF);
-            NewBox.InputLetter = " ";
+            NewBox.transform.SetParent(this.transform);
+            NewBox.Letter = " ";
+            NewBox.transform.name = $"LetterBox{counter}";
+            NewBox.IsLetter = false;
             NewBox.gameObject.SetActive(false);
             letterBoxes.Add(NewBox);
-            print(NewBox.InputLetter);
 
             counter++;
             yPos -= letterBoxDim.y;
@@ -185,6 +231,7 @@ public class TextBlock : MonoBehaviour
 
     void DetectInput()
     {
+        //print($"The current index at start of Detect Input is {selectedBoxIndex}");
         //Non-Letter Key Input
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -198,7 +245,9 @@ public class TextBlock : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            letterBoxes[selectedBoxIndex].InputLetter = " ";
+            letterBoxes[selectedBoxIndex].InputLetter = " "; 
+            //print("---------------------------------------------------------------------");
+            //print($"The current index as of pressing backspace or space is {selectedBoxIndex}.");
             SelectNextBox();
             return;
         }
