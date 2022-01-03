@@ -4,35 +4,26 @@ using UnityEngine;
 
 public class TextBlock : MonoBehaviour
 {
+    #region Variables
     [SerializeField] LetterBox letterBoxPF;
     [SerializeField] float spaceGap = 20;
+    [SerializeField] bool centerAlignX = true;
+    [SerializeField] bool centerAlignY = false;
 
-    string text = "Tantalus made a wild grab, but the marshmallow committed suicide, diving into the flames.";
+    string text = "";
 
     List<LetterBox> letterBoxes = new List<LetterBox>();
     List<string> words = new List<string>();
     List<string> rowsText = new List<string>();
 
     Vector2 letterBoxDim;
+    Vector2 letterBoxSpacing;
+    Vector2 dimensions;
     RectTransform rt;
     int selectedBoxIndex = -1;
-    /*
-    int selectedBoxIndexTest = -1;
+    #endregion
 
-    int SelectedBoxIndex
-    {
-        get { return selectedBoxIndexTest; }
-        set
-        {
-            print("Set request SelectedBoxIndex");
-            if (selectedBoxIndexTest != value)
-            {
-                print("Changing value of SelectedBoxIndex");
-                selectedBoxIndexTest = value;
-            }
-        }
-    }
-    */
+    #region Attributes
     public string Text
     {
         set
@@ -49,9 +40,11 @@ public class TextBlock : MonoBehaviour
             //Generate New Text
             text = value;
             GenerateTextBlock(text);
+
+            //LetterBoxes Setup
+            letterBoxes[0].IsSelected = true;
         }
     }
-
     public string Output
     {
         get
@@ -62,18 +55,16 @@ public class TextBlock : MonoBehaviour
             return output;
         }
     }
+    #endregion
 
-    private void Start()
+    #region Unity Methods
+    private void Awake()
     {
         //Load variables
         letterBoxDim = LetterBox.Dimensions;
+        letterBoxSpacing = LetterBox.Spacing;
         rt = GetComponent<RectTransform>();
-
-        //Generate Text Block
-        Text = text;
-
-        //LetterBoxes Setup
-        letterBoxes[0].IsSelected = true;
+        dimensions = GetComponent<BoxDimensions>().Dimensions;
     }
 
     private void Update()
@@ -81,61 +72,77 @@ public class TextBlock : MonoBehaviour
         //SelectedBoxIndex = selectedBoxIndex;
         DetectInput();
     }
+    #endregion
 
-    public void UpdateSelectedBox(int newIndex)
-    {
-        letterBoxes[selectedBoxIndex].IsSelected = false;
-        letterBoxes[newIndex].IsSelected = true;
-        selectedBoxIndex = newIndex;
-        //print($"The current index after updating the selected box is {selectedBoxIndex}.");
-    }
-
-    private void SelectNextBox()
-    {
-        int newBoxIndex = selectedBoxIndex;
-        do
-        {
-            if (newBoxIndex == letterBoxes.Count - 1)
-                newBoxIndex = selectedBoxIndex;
-            else
-                newBoxIndex++;
-        }
-        while (!letterBoxes[newBoxIndex].IsLetter);//Makes sure you are switching to a letter whose value you can change and not something like a period
-        //print($"New index at the time of choosing the new index is {newBoxIndex} and the current index is {selectedBoxIndex}.");
-        UpdateSelectedBox(newBoxIndex);
-    }
-
-    private void SelectPrevBox()
-    {
-        int newBoxIndex = selectedBoxIndex;
-        do
-        {
-            if (newBoxIndex == 0)
-                newBoxIndex = selectedBoxIndex;
-            else
-                newBoxIndex--;
-        }
-        while (!letterBoxes[newBoxIndex].IsLetter);//Makes sure you are switching to a letter whose value you can change and not something like a period
-        UpdateSelectedBox(newBoxIndex);
-    }
-
+    #region TextBlock Methods
+    //Generate TextBlock Methods
     private void GenerateTextBlock(string _text)
     {
+        if (rt ==  null)
+        {
+            letterBoxDim = LetterBox.Dimensions;
+            rt = GetComponent<RectTransform>();
+        }
+
         SeperateWords(_text);
         SeperateWordsIntoRows();
+
+        /*debugging
+        print("Strings to print");
+        foreach (string text in rowsText)
+            print(text);
+        */
         InstantiateLetterBoxes(_text);
 
     }
 
+    float xpos;
+    //Debugging
+    /*
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(new Vector3(xpos, 0, rt.position.z), new Vector3(xpos, 10000, rt.position.z));
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(new Vector3(rt.position.x, 0, rt.position.z), new Vector3(rt.position.x, 10000, rt.position.z));
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(new Vector3(rt.position.x - dimensions.x / 2, 0, rt.position.z), new Vector3(rt.position.x - dimensions.x / 2, 10000, rt.position.z));
+    }
+    */
     private void InstantiateLetterBoxes(string _text)
     {
         int numRows = rowsText.Count;
         int counter = 0;
-        float yPos = rt.position.y + rt.sizeDelta.y / 2 - letterBoxDim.y / 2;
-        foreach (string word in rowsText)
+
+        float yPos;
+        if (centerAlignY)
         {
-            float xPos = rt.position.x - rt.sizeDelta.x / 2 + letterBoxDim.x / 2;
-            foreach (char c in word)
+            float blockHeight = numRows * letterBoxSpacing.y;
+            yPos = rt.position.y + blockHeight / 2 - letterBoxSpacing.y / 2;
+        }
+        else
+        {
+            yPos = rt.position.y + dimensions.y / 2 - letterBoxSpacing.y / 2;
+        }
+
+        foreach (string text in rowsText)
+        {
+            float xPos = 0f;
+            if (centerAlignX)
+            {
+                int numWords = text.Split(" "[0]).Length;
+                float blockWidth = numWords*letterBoxSpacing.x + (numWords-1)*spaceGap;
+                xPos = rt.position.x - blockWidth / 2 + letterBoxDim.x / 2;
+            }
+            else
+            {
+                xPos = rt.position.x - dimensions.x / 2 + letterBoxDim.x / 2;
+            }
+
+            //debugging
+            xpos = xPos;
+
+            foreach (char c in text)
             {
                 if (c == " "[0])
                 {
@@ -168,7 +175,7 @@ public class TextBlock : MonoBehaviour
                     selectedBoxIndex = counter;
                 }
 
-                xPos += letterBoxDim.x;
+                xPos += letterBoxSpacing.x;
                 counter++;
             }
 
@@ -181,17 +188,24 @@ public class TextBlock : MonoBehaviour
             letterBoxes.Add(NewBox);
 
             counter++;
-            yPos -= letterBoxDim.y;
+            yPos -= letterBoxSpacing.y;
         }
+
+        //Removes the ending space that the code above adds
+        LetterBox box = letterBoxes[letterBoxes.Count - 1];
+        letterBoxes.RemoveAt(letterBoxes.Count - 1);
+        Destroy(box.gameObject);
     }
 
     private void SeperateWordsIntoRows()
     {
+        rowsText.Clear();
+        
         float spaceTaken = 0f;
         string textInRow = "";
         foreach (string word in words)
         {
-            if (spaceTaken + spaceGap + (word.Length * letterBoxDim.x) > rt.sizeDelta.x)
+            if (spaceTaken + spaceGap + (word.Length * letterBoxDim.x) > dimensions.x)
             {
                 rowsText.Add(textInRow.Remove(0, 1));
                 textInRow = "";
@@ -207,29 +221,14 @@ public class TextBlock : MonoBehaviour
     {
         words.Clear();
 
-        char[] charText = _text.ToCharArray();
-        string word = "";
-        foreach (char c in charText)
-        {
-            if (c == " "[0])
-            {
-                if (!(word.Length == 0))
-                {
-                    words.Add(word);
-                }
-                word = "";
-            }
-            else
-                word += c;
-        }
+        string[] w = _text.Split(" "[0]);
 
-        if (!(word.Length == 0))
-        {
+        foreach (string word in w)
             words.Add(word);
-        }
     }
 
-    void DetectInput()
+    //Input Methods
+    private void DetectInput()
     {
         //print($"The current index at start of Detect Input is {selectedBoxIndex}");
         //Non-Letter Key Input
@@ -410,4 +409,42 @@ public class TextBlock : MonoBehaviour
             return;
         }
     }
+
+    public void UpdateSelectedBox(int newIndex)
+    {
+        letterBoxes[selectedBoxIndex].IsSelected = false;
+        letterBoxes[newIndex].IsSelected = true;
+        selectedBoxIndex = newIndex;
+        //print($"The current index after updating the selected box is {selectedBoxIndex}.");
+    }
+
+    private void SelectNextBox()
+    {
+        int newBoxIndex = selectedBoxIndex;
+        do
+        {
+            if (newBoxIndex == letterBoxes.Count - 1)
+                newBoxIndex = selectedBoxIndex;
+            else
+                newBoxIndex++;
+        }
+        while (!letterBoxes[newBoxIndex].IsLetter);//Makes sure you are switching to a letter whose value you can change and not something like a period
+        //print($"New index at the time of choosing the new index is {newBoxIndex} and the current index is {selectedBoxIndex}.");
+        UpdateSelectedBox(newBoxIndex);
+    }
+
+    private void SelectPrevBox()
+    {
+        int newBoxIndex = selectedBoxIndex;
+        do
+        {
+            if (newBoxIndex == 0)
+                newBoxIndex = selectedBoxIndex;
+            else
+                newBoxIndex--;
+        }
+        while (!letterBoxes[newBoxIndex].IsLetter);//Makes sure you are switching to a letter whose value you can change and not something like a period
+        UpdateSelectedBox(newBoxIndex);
+    }
+    #endregion
 }

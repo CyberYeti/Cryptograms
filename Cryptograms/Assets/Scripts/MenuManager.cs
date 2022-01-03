@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
 
     int currentIndex = 0;
 
+    
     void Start()
     {
         optionsDropdown.ClearOptions();

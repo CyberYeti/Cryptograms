@@ -96,7 +96,14 @@ public class LetterBox : MonoBehaviour
     {
         get
         {
-            return new Vector2(35.9f,80);
+            return new Vector2(40f,88f);
+        }
+    }
+    public static Vector2 Spacing
+    {
+        get
+        {
+            return new Vector2(35f, 80f);
         }
     }
 
