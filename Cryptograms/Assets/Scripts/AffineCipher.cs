@@ -7,16 +7,20 @@ public class AffineCipher : MonoBehaviour
     #region Variables
     [SerializeField] TextMeshProUGUI instructionsText;
     [SerializeField] TextBlock textBlock;
+    [SerializeField] ResultsPanel resultsPanel;
 
     int keyA;
     int keyB;
     string key;
     string plainText;
     string cipherText;
+    string answerText;
     bool isEncrypted = false; //If true, result should be the plaintext
 
-    char[] a0z25 = A0Z25.a0z25Table;
+    int numCorrect = 0;
+    int numWrong = 0;
 
+    char[] a0z25 = A0Z25.a0z25Table;
     int[] AValues =
     {
         1,
@@ -66,33 +70,54 @@ public class AffineCipher : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            CheckAnswer();
+            CheckAnswer_Button();
         }
     }
     #endregion
 
     #region Custom Methods
+    public void CheckAnswer_Button()
+    {
+        //Get output from TextBlock
+        string output = textBlock.Output;
+        //Find number of correct and wrong characters
+        CalculateNumCorrectWrong(output);
+        
+        //Setup results panel
+        resultsPanel.gameObject.SetActive(true);
+        resultsPanel.CipherType = "Affine";
+        resultsPanel.IsCorrect = (output == answerText.ToUpper());
+        resultsPanel.NumCorrect = numCorrect;
+        resultsPanel.NumWrong = numWrong;
+        print($"The correct answer is {answerText}");
+    }
+
     public void LoadNewCipher()
     {
+        //Get Key
         keyA = AValues[Random.Range(0, AValues.Length)];
         keyB = Random.Range(1, 26);
         key = "key: (" + keyA + "," + keyB + ")";
+        //Generate message and make encrypted version
         plainText = Messages.RandomMessage();
         cipherText = EncryptAffine(plainText);
+        //Decide whether to make player encrypt or decrypt
         if (Random.Range(0, 2) == 0)
             isEncrypted = false;
         else
             isEncrypted = true;
-
+        //Set up the ui
         if (isEncrypted)
         {
             instructionsText.text = "\nDecrypt using the " + key;
             textBlock.Text = cipherText;
+            answerText = plainText;
         }
         else
         {
             instructionsText.text = "\nEncrypt using the " + key;
             textBlock.Text = plainText;
+            answerText = cipherText;
         }
     }
 
@@ -122,43 +147,20 @@ public class AffineCipher : MonoBehaviour
         return (output);
     }
 
-    public void CheckAnswer()
+    public void CalculateNumCorrectWrong(string _output)
     {
-        string output = textBlock.Output;
-        if (isEncrypted)
-        {
-            if (output == plainText.ToUpper())
-            {
-                print($"Correct!. The answer is {plainText}");
-            }
-            else
-            {
-                print($"Wrong. The correct answer is {plainText}");
-            }
-        }
-        else
-        {
-            if (output == cipherText.ToUpper())
-            {
-                print($"Correct!. The answer is {cipherText}");
-            }
-            else
-            {
-                print($"Wrong. The correct answer is {cipherText}");
-            }
-        }
-    }
+        numCorrect = 0;
+        numWrong = 0;
 
-    private string RemoveEndingCharacter(string str)
-    {
-        char[] strc1 = str.ToCharArray();
-        str = "";
-        for (int i = 0; i < strc1.Length - 1; i++)
+        string _answerText = answerText.ToUpper();//The output is in uppercase
+        for (int i = 0; i < _answerText.Length; i++)
         {
-            str += strc1[i];
+            if (!A0Z25.IsLetter(_answerText[i])) { continue; }
+            if (_answerText[i] == _output[i])
+                numCorrect++;
+            else
+                numWrong++;
         }
-
-        return str;
     }
     #endregion
 }
