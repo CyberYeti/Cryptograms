@@ -57,9 +57,4 @@ public class ResultsPanel : MonoBehaviour
     }
 
     //Unity Methods
-    private void Start()
-    {
-        this.gameObject.SetActive(false);
-        IsCorrect = true;
-    }
 }

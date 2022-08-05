@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 95532061}
   - component: {fileID: 95532060}
   m_Layer: 5
-  m_Name: Ans is Correct
+  m_Name: Answer Correct/Wrong Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -322,13 +322,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 143796104}
-  m_RootOrder: 0
+  m_Father: {fileID: 109558425}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 214}
-  m_SizeDelta: {x: 509.6475, y: 50}
+  m_AnchoredPosition: {x: 0, y: 153.00005}
+  m_SizeDelta: {x: 794.7686, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &95532060
 MonoBehaviour:
@@ -445,7 +445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &109558425
 RectTransform:
   m_ObjectHideFlags: 0
@@ -459,8 +459,8 @@ RectTransform:
   m_Children:
   - {fileID: 411046672}
   - {fileID: 1599025628}
-  - {fileID: 143796104}
-  - {fileID: 1231712573}
+  - {fileID: 95532059}
+  - {fileID: 1211708265}
   m_Father: {fileID: 730462060}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -519,45 +519,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6817b01442381443912b6212696741f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cipherType: {fileID: 1599025629}
-  correctAnsUI: {fileID: 143796104}
-  wrongAnsUI: {fileID: 1231712573}
---- !u!1 &143796103
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 143796104}
-  m_Layer: 5
-  m_Name: Correct Answer UI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &143796104
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 143796103}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 95532059}
-  m_Father: {fileID: 109558425}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000061035, y: -61}
-  m_SizeDelta: {x: 1297.1, y: 478}
-  m_Pivot: {x: 0.5, y: 0.5}
+  cipherTypeUI: {fileID: 1599025629}
+  AnswerCorrectnessUI: {fileID: 95532060}
+  numCorrectWrongUI: {fileID: 1211708266}
 --- !u!1 &359908163
 GameObject:
   m_ObjectHideFlags: 0
@@ -1821,7 +1785,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1633080590}
         m_TargetAssemblyTypeName: AffineCipher, Assembly-CSharp
-        m_MethodName: CheckAnswer
+        m_MethodName: CheckAnswer_Button
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2738,7 +2702,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175619303}
   m_CullTransparentMesh: 1
---- !u!1 &1197350624
+--- !u!1 &1211708264
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2746,42 +2710,42 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1197350625}
-  - component: {fileID: 1197350627}
-  - component: {fileID: 1197350626}
+  - component: {fileID: 1211708265}
+  - component: {fileID: 1211708267}
+  - component: {fileID: 1211708266}
   m_Layer: 5
-  m_Name: Ans is Wrong
+  m_Name: Num Correct and Wrong
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1197350625
+--- !u!224 &1211708265
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197350624}
+  m_GameObject: {fileID: 1211708264}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1231712573}
-  m_RootOrder: 0
+  m_Father: {fileID: 109558425}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 214}
-  m_SizeDelta: {x: 509.6475, y: 50}
+  m_AnchoredPosition: {x: 0, y: 103.000015}
+  m_SizeDelta: {x: 1184.1278, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1197350626
+--- !u!114 &1211708266
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197350624}
+  m_GameObject: {fileID: 1211708264}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
@@ -2795,7 +2759,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Your Answer is Wrong!
+  m_text: 'Correct Letters: 99     Wrong Letters: 99'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2864,13 +2828,13 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &1197350627
+--- !u!222 &1211708267
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197350624}
+  m_GameObject: {fileID: 1211708264}
   m_CullTransparentMesh: 1
 --- !u!1 &1231262199
 GameObject:
@@ -2938,42 +2902,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1231712572
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1231712573}
-  m_Layer: 5
-  m_Name: Wrong Answer UI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1231712573
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231712572}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1197350625}
-  m_Father: {fileID: 109558425}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000061035, y: -61}
-  m_SizeDelta: {x: 1297.1, y: 478}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1417561351
 GameObject:
   m_ObjectHideFlags: 0
@@ -3570,7 +3498,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Cipher: Affine'
+  m_text: 'Cipher: Hill'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3697,7 +3625,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instructionsText: {fileID: 5941422}
   textBlock: {fileID: 1817649861}
-  resultsPanel: {fileID: 0}
+  resultsPanel: {fileID: 109558428}
 --- !u!1 &1776326619
 GameObject:
   m_ObjectHideFlags: 0
